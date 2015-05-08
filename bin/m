@@ -1,0 +1,13 @@
+#!/bin/sh
+
+DIR=$( cd "$( dirname "$0" )" && pwd )
+BIN="java -jar $(ls $DIR/../target/*-standalone.jar | head -n 1)"
+
+OUTPUT=$($BIN $0 $*)
+
+if [[ $OUTPUT = 'exec|'* ]]
+then
+        eval "${OUTPUT:5}" #< /dev/tty;
+else
+        echo "$OUTPUT"
+fi
