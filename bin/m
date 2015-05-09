@@ -7,7 +7,7 @@ OUTPUT=$($BIN $0 $*)
 
 if [[ $OUTPUT = 'exec|'* ]]
 then
-        eval "${OUTPUT:5}" #< /dev/tty;
+        eval "${OUTPUT:5}" < /dev/tty;
 else
         echo "$OUTPUT"
 fi

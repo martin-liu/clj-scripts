@@ -3,26 +3,30 @@
   (:require [clojure.tools.cli :refer [parse-opts]]
             [clojure.string :as string]
             [script.ssh.core :as ssh]
+            [script.mibox.core :as mibox]
             [script.util :as util]))
 
 ;;; Privates
 (def ^:private ^:const m-ns 'script.core)
 
-;;; Publics
-(defn ssh
-  "ssh utlities"
-  ([prefix] (ssh prefix "-h"))
-  ([prefix command & args]
-   (let [the-ns 'script.ssh.core]
-     (if-let [f (ns-resolve the-ns (symbol command))]
-       (apply f args)
-       (println (util/usage (str prefix " ssh") the-ns))))))
+;; function generator
+(defn- generate [cmd]
+  (fn self
+    ([prefix] (self prefix "-h"))
+    ([prefix command & args]
+     (let [the-ns (symbol (str "script." cmd ".core"))]
+       (if-let [f (ns-resolve the-ns (symbol command))]
+         (apply f args)
+         (println (util/usage (str prefix " " cmd) the-ns)))))))
 
-(defn mibox
+;;; Publics
+(def ssh
+  "ssh utlities"
+  (generate "ssh"))
+
+(def mibox
   "Mibox TV custom channels management"
-  ([] (mibox "-h"))
-  ([& args]
-   ))
+  (generate "mibox"))
 
 (defn -main
   ([prefix] (-main prefix "-h"))

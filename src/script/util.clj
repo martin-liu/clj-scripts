@@ -20,4 +20,4 @@
          (string/join \newline))))
 
 (defn exec [command]
-  (print (str "exec|" command)))
+  (println (str "exec|" command)))

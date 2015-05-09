@@ -1,5 +1,5 @@
 (ns script.ssh.core
-  (:require [clojure.pprint :as pprint]
+  (:require [clojure.string :as string]
             [script.config :refer [config]]
             [script.util :as util]))
 
@@ -8,16 +8,17 @@
 (defn ls
   "List all ssh servers"
   [& args]
-  (println @conf)
   (let [len (apply max
                    (map #(count (name %)) (keys @conf)))]
-    (doseq [[key value] @conf]
-      (printf (str "%" len "s" ": %s\n") (name key) value))))
+    (println (->> @conf
+                  (map (fn [[key value :as entry]]
+                         (format (str "%" len "s" ": %s") (name key) value)))
+                  (string/join \newline)))))
 
 (defn g
   "Get IP of a server"
   [key]
-  (print ((keyword key) @conf)))
+  (println ((keyword key) @conf)))
 
 (defn s
   "SSH to a server"
