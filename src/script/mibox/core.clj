@@ -40,13 +40,13 @@
                             (io/input-stream
                              (.getBytes content java.nio.charset.StandardCharsets/UTF_8)))]
     (if success
-      (println "save file success!")
-      (println "save file failed! error code: " (.getReplyCode client)))))
+      (util/out "save file success!")
+      (util/out "save file failed! error code: " (.getReplyCode client)))))
 
 (defn ls
   "List all channels"
   [& args]
-  (println (slurp url)))
+  (util/out (slurp url)))
 
 (defn add
   "Add/update a channel"

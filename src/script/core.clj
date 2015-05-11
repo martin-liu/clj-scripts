@@ -17,7 +17,7 @@
      (let [the-ns (symbol (str "script." cmd ".core"))]
        (if-let [f (ns-resolve the-ns (symbol command))]
          (apply f args)
-         (println (util/usage (str prefix " " cmd) the-ns)))))))
+         (util/out (util/usage (str prefix " " cmd) the-ns)))))))
 
 ;;; Publics
 (def ssh
@@ -33,4 +33,4 @@
   ([prefix command & args]
    (if-let [f (ns-resolve m-ns (symbol command))]
      (apply f (conj args prefix))
-     (println (util/usage prefix m-ns)))))
+     (util/out (util/usage prefix m-ns)))))

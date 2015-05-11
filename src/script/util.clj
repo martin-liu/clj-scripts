@@ -4,6 +4,9 @@
 (defn- get-doc [the-var]
   (str "\t\t" (:doc (meta the-var))))
 
+(defn out [& args]
+  (apply println args))
+
 (defn usage [prefix the-ns]
   (let [publics (ns-publics the-ns)]
     (->> ["Scripts"
@@ -20,4 +23,4 @@
          (string/join \newline))))
 
 (defn exec [command]
-  (println (str "exec|" command)))
+  (out (str "exec|" command)))

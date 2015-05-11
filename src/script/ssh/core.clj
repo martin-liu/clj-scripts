@@ -10,7 +10,7 @@
   [& args]
   (let [len (apply max
                    (map #(count (name %)) (keys @conf)))]
-    (println (->> @conf
+    (util/out (->> @conf
                   (map (fn [[key value :as entry]]
                          (format (str "%" len "s" ": %s") (name key) value)))
                   (string/join \newline)))))
@@ -18,7 +18,7 @@
 (defn g
   "Get IP of a server"
   [key]
-  (println ((keyword key) @conf)))
+  (util/out ((keyword key) @conf)))
 
 (defn s
   "SSH to a server"
