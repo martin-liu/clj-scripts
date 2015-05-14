@@ -1,11 +1,18 @@
 {
- :ssh {
+ :ssh [
        ;; example
        :local "127.0.0.1"
-       }
+       ]
  :mibox {
          :host "192.168.1.112"
          :port 2121
          :file "channel.txt"
          }
+ :crawler {
+           :gulu {
+                  :host "xx.xx.xx.xx"
+                  :email "xx@xx"
+                  :password "xx"
+                  }
+           }
  }
