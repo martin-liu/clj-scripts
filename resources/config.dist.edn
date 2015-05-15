@@ -10,7 +10,7 @@
          }
  :crawler {
            :gulu {
-                  :host "xx.xx.xx.xx"
+                  :base-url "http://xx.xx.xx.xx"
                   :email "xx@xx"
                   :password "xx"
                   }
