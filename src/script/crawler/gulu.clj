@@ -1,6 +1,7 @@
 (ns script.crawler.gulu
   "Candidates crawler for gulu"
-  (:require [clj-http.client :as http]
+  (:require [clojure.core.async :refer :all]
+            [clj-http.client :as http]
             [clj-http.cookies :as cookie]
             [script.config :refer [config]]))
 
@@ -15,6 +16,13 @@
   "Merge default param with provided param"
   [param-map]
   (merge {:cookie-store cookie} param-map))
+(defn- request
+  "request a URI"
+  ([uri] (request uri {}))
+  ([uri parameters] (request uri parameters http/get))
+  ([uri parameters method]
+   (http/json-decode (:body (method (get-url uri)
+                                    (param parameters))))))
 
 (defn login
   ([] (login (:email conf) (:password conf)))
@@ -27,40 +35,44 @@
          ret (http/post (get-url "/rest/user/login")
                         (param {:form-params json-param}))]
      (if (= (:status ret) 200)
-       (deliver user (get-in (http/json-decode
-                              (:body (http/get (get-url "/rest/user/context")
-                                               (param {}))))
+       (deliver user (get-in (request "/rest/user/context")
                              ["user"]))))))
 
 (defn with-login
   "Make sure login first before call function"
-  [f]
-  (if (realized? user)
-    (let [ret (f)]
-      ((http/json-decode (:body ret))))
-    (do (login)
-        (f))))
+  ([f do-login?]
+   (do (login)
+       (f)))
+  ([f]
+   (if (realized? user)
+     (let [body (f)]
+       (if (and (= false (get body "status"))
+                (= "login required" (get body "message")))
+         (with-login f true)
+         body))
+     (with-login f true))))
 
 (defn get-all-candidates
   ([] (get-all-candidates 1))
   ([page]
    (with-login
-     #(http/get (get-url "/rest/candidate/list")
-                (param
-                 {:query-params {
-                                 :user_id (get @user "id")
-                                 :page page
-                                 :current "latest"
-                                 :byfilter 8937
-                                 :ordering "-dateAdded"
-                                 :paginate_by 100
-                                 }})))))
+     #(request "/rest/candidate/list"
+               {:query-params {
+                               :user_id (get @user "id")
+                               :page page
+                               :current "latest"
+                               :byfilter 8937
+                               :ordering "-dateAdded"
+                               :paginate_by 100
+                               }}))))
 
 (defn retrieve-candidate
   [cand-id]
-  (if-let (http/get (get-url "/rest/candidate/" cand-id))))
-(defn download-file
-  [url]
-  )
-(with-login
-  #(http/get (get-url "/rest/candidate/" 125779)))
+  (with-login
+    #(let [cand (request (str "/rest/candidate/" cand-id))]
+       (request "/rest/note/list"
+                {:query-params {
+                                :paginate_by 200
+                                :external_type "candidate"
+                                :external_id cand-id
+                                }}))))

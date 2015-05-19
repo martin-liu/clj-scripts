@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.7.0-beta2"]
                  [org.clojure/tools.cli "0.3.1"]
                  [commons-net/commons-net "3.3"]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  ;; http client
                  [clj-http "1.1.2"]]
   :profiles {:dev {:dependencies [[midje "1.6.3"]]}}
