@@ -1,13 +1,16 @@
 (ns script.crawler.gulu
   "Candidates crawler for gulu"
-  (:require [clojure.core.async :refer :all]
+  (:require [clojure.core.async :as a]
             [clj-http.client :as http]
             [clj-http.cookies :as cookie]
+            [selmer.parser :refer :all]
             [script.config :refer [config]]))
 
 (def ^:private conf (get-in @config [:crawler :gulu]))
 (def ^:private cookie (cookie/cookie-store))
 (def ^:private user (promise))
+(def ^:private html-tpl "gulu/resume.tpl.html")
+
 (defn- get-url
   "Concatenate url"
   [uri & rest]
@@ -22,9 +25,19 @@
   ([uri parameters] (request uri parameters http/get))
   ([uri parameters method]
    (http/json-decode (:body (method (get-url uri)
-                                    (param parameters))))))
+                                    (param parameters)))
+                     ;; make key to be keyword rather than string
+                     true)))
 
-(defn login
+(defn- save-file [cand]
+  (let [f (clojure.string/join [(:industry cand)
+                                (:chineseName cand)
+                                (:title cand)
+                                (:mobile cand)]
+                               "_")]
+    (spit f (render-file html-tpl cand))))
+
+(defn- login
   ([] (login (:email conf) (:password conf)))
   ([email password]
    (let [json-param {:data (http/json-encode
@@ -69,10 +82,26 @@
 (defn retrieve-candidate
   [cand-id]
   (with-login
-    #(let [cand (request (str "/rest/candidate/" cand-id))]
-       (request "/rest/note/list"
-                {:query-params {
-                                :paginate_by 200
-                                :external_type "candidate"
-                                :external_id cand-id
-                                }}))))
+    #(let [cand (request (str "/rest/candidate/" cand-id))
+           notes (request "/rest/note/list"
+                          {:query-params {
+                                          :paginate_by 200
+                                          :external_type "candidate"
+                                          :external_id cand-id
+                                          }})]
+       (merge cand {:notes notes})
+       #_(let [attachments (get cand "attachments")]))))
+
+
+#_(str "/rest/file/preview/" uuid)
+
+#_(println (render-file (retrieve-candidate 125779)))
+
+(defn file-saver
+  []
+  (let [chan (a/chan)]
+    (a/go
+      (while true
+        (let [cand (a/<! chan)]
+          (save-file cand))))
+    chan))

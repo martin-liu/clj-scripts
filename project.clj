@@ -8,7 +8,10 @@
                  [commons-net/commons-net "3.3"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  ;; http client
-                 [clj-http "1.1.2"]]
+                 [clj-http "1.1.2"]
+                 ;; Html templating
+                 [selmer "0.8.2"]
+                 ]
   :profiles {:dev {:dependencies [[midje "1.6.3"]]}}
   :main script.core
   :aot [script.core])
