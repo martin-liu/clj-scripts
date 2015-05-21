@@ -4,6 +4,7 @@
             [clojure.string :as string]
             [script.ssh.core :as ssh]
             [script.mibox.core :as mibox]
+            [script.crawler.core :as crawler]
             [script.util :as util]))
 
 ;;; Privates
@@ -20,13 +21,17 @@
          (util/out (util/usage (str prefix " " cmd) the-ns)))))))
 
 ;;; Publics
-(def ssh
+(def ^:command ssh
   "ssh utlities"
   (generate "ssh"))
 
-(def mibox
+(def ^:command mibox
   "Mibox TV custom channels management"
   (generate "mibox"))
+
+(def ^:command crawler
+  "Crawlers"
+  (generate "crawler"))
 
 (defn -main
   ([prefix] (-main prefix "-h"))

@@ -5,7 +5,7 @@
 
 (def ^:private conf (delay (:ssh @config)))
 
-(defn ls
+(defn ^:command ls
   "List all ssh servers"
   [& args]
   (let [len (apply max
@@ -15,12 +15,12 @@
                           (format (str "%" len "s" ": %s") (name key) value)))
                    (string/join \newline)))))
 
-(defn g
+(defn ^:command g
   "Get IP of a server"
   [key]
   (util/out ((keyword key) (apply hash-map @conf))))
 
-(defn s
+(defn ^:command s
   "SSH to a server"
   [key & args]
   (let [username (or (first args) "$(whoami)")

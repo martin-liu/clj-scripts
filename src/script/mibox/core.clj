@@ -43,12 +43,12 @@
       (util/out "save file success!")
       (util/out "save file failed! error code: " (.getReplyCode client)))))
 
-(defn ls
+(defn ^:command ls
   "List all channels"
   [& args]
   (util/out (slurp url)))
 
-(defn add
+(defn ^:command add
   "Add/update a channel"
   [key value]
   (->
@@ -56,7 +56,7 @@
    get-channel-str
    save))
 
-(defn rm
+(defn ^:command rm
   "Remove a channel"
   [key]
   (->

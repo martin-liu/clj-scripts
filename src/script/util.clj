@@ -16,7 +16,7 @@
           "Commands:"
           (->>
            (keys publics)
-           (filter #(not= (symbol "-main") %))
+           (filter #(= true (:command (meta (% publics)))))
            (map #(string/join ["  " % (get-doc (% publics))]))
            (string/join \newline))
           ]
