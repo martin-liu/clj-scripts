@@ -3,6 +3,14 @@ DIR=$( cd "$( dirname "$0" )" && pwd )
 export PATH=$PATH:$DIR/bin
 export TERM=screen-256color
 
+if [ ! $EMACS ]; then
+    # not in emacs
+    ZSH_THEME=agnoster
+else
+    # in emacs
+    ZSH_THEME=robbyrussell
+fi
+
 ## Add percol functions
 source $DIR/percol/percol.rc
 
