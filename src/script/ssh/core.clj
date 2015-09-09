@@ -36,11 +36,11 @@
   [arg1 arg2 & args]
   (let [username (or (first args) "$(whoami)")
         get-key (fn [path]
-                   (let [match (re-find #"(.*):.*" path)]
-                     (if (and match
-                              (= 2 (count match)))
-                       (last match)
-                       path)))
+                  (let [match (re-find #"(.*):.*" path)]
+                    (if (and match
+                             (= 2 (count match)))
+                      (last match)
+                      path)))
         replace-key (fn [path]
                       (let [key (get-key path)
                             replace-str (str username "@" (get-ip key))]
