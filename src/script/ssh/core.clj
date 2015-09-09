@@ -4,6 +4,10 @@
             [script.util :as util]))
 
 (def ^:private conf (delay (:ssh @config)))
+(defn ^:private get-ip
+  "get ip from the key"
+  [key]
+  (or ((keyword key) (apply hash-map @conf)) key))
 
 (defn ^:command ls
   "List all ssh servers"
@@ -18,11 +22,31 @@
 (defn ^:command g
   "Get IP of a server"
   [key]
-  (util/out ((keyword key) (apply hash-map @conf))))
+  (util/out (get-ip key)))
 
 (defn ^:command s
   "SSH to a server"
   [key & args]
   (let [username (or (first args) "$(whoami)")
-        ip (or ((keyword key) (apply hash-map @conf)) key)]
+        ip (get-ip key)]
     (util/exec (str "ssh " username "@" ip))))
+
+(defn ^:command cp
+  "Scp file"
+  [arg1 arg2 & args]
+  (let [username (or (first args) "$(whoami)")
+        get-key (fn [path]
+                   (let [match (re-find #"(.*):.*" path)]
+                     (if (and match
+                              (= 2 (count match)))
+                       (last match)
+                       path)))
+        replace-key (fn [path]
+                      (let [key (get-key path)
+                            replace-str (str username "@" (get-ip key))]
+                        (if (= key path)
+                          path
+                          (.replace path key replace-str))))
+        path1 (replace-key arg1)
+        path2 (replace-key arg2)]
+    (util/exec (str "scp -r " path1 " " path2))))
