@@ -21,7 +21,11 @@ function exists { which $1 &> /dev/null }
 
 ## Boot2docker
 if exists boot2docker; then
-    eval "$(boot2docker shellinit)"
+    if [ $(boot2docker status) != "running" ]; then
+        eval "$(boot2docker up)"
+    fi
+
+    eval "$(boot2docker shellinit &> /dev/null)"
 fi
 
 ### Martin's script
