@@ -25,7 +25,7 @@ if exists boot2docker; then
         eval "$(boot2docker up)"
     fi
 
-    eval "$(boot2docker shellinit &> /dev/null)"
+    eval "$(boot2docker shellinit 2> /dev/null)"
 fi
 
 ### Martin's script
