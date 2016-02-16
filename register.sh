@@ -12,20 +12,24 @@ else
 fi
 
 ## Add percol functions
-source $DIR/percol/percol.rc
+source $DIR/shell/percol/percol.rc
 
 ## The fuck
 alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
 
 function exists { which $1 &> /dev/null }
 
-## Boot2docker
-if exists boot2docker; then
-    if [ $(boot2docker status) != "running" ]; then
-        eval "$(boot2docker up)"
+## docker for mac
+if exists docker-machine; then
+    command="docker-machine env vm 2> /dev/null"
+
+    if [ $(docker-machine status vm) != "Running" ]; then
+        echo "Starting docker machine 'vm' in background..."
+        docker-machine start vm > /dev/null 2>&1 &
     fi
 
-    eval "$(boot2docker shellinit 2> /dev/null)"
+    eval $(eval $command)
+
 fi
 
 ### Martin's script
