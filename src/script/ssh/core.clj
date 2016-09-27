@@ -4,8 +4,8 @@
             [script.util :as util]))
 
 (def ^:private conf (delay (:ssh @config)))
-(defn ^:private get-ip
-  "get ip from the key"
+(defn ^:private get-server
+  "get server from the key"
   [key]
   (or ((keyword key) (apply hash-map @conf)) key))
 
@@ -22,13 +22,13 @@
 (defn ^:command g
   "Get IP of a server"
   [key]
-  (util/out (get-ip key)))
+  (util/out (get-server key)))
 
 (defn ^:command s
   "SSH to a server"
   [key & args]
   (let [username (or (first args) "$(whoami)")
-        ip (get-ip key)]
+        ip (get-server key)]
     (util/exec (str "ssh " username "@" ip))))
 
 (defn ^:command cp
@@ -43,7 +43,7 @@
                       path)))
         replace-key (fn [path]
                       (let [key (get-key path)
-                            replace-str (str username "@" (get-ip key))]
+                            replace-str (str username "@" (get-server key))]
                         (if (= key path)
                           path
                           (.replace path key replace-str))))
