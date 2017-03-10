@@ -1,3 +1,5 @@
+#!env zsh
+
 ### Get current dir
 DIR=$( cd "$( dirname "$0" )" && pwd )
 export PATH=$PATH:$DIR/bin
@@ -62,3 +64,5 @@ e(){
 et(){
     exec emacsclient -a "" -t "$@"
 }
+
+source $DIR/shell/util.sh

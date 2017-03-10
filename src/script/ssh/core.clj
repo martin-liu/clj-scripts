@@ -25,11 +25,19 @@
   (util/out (get-server key)))
 
 (defn ^:command s
-  "SSH to a server"
-  [key & args]
-  (let [username (or (first args) "$(whoami)")
+  "SSH to a server or exec command: `[user@]host-key [command]`"
+  [keystr & args]
+  (let [match (re-find #"(.*)@(.*)" keystr) ; check if `user@host-key` style
+        username (or (and match
+                          (= 3 (count match))
+                          (second match)) ; if `user@host-key`, then parse user, otherwise use `$(whoami)`
+                     "$(whoami)")
+        key (or (and match
+                     (= 3 (count match))
+                     (last match))      ; if `user@host-key`, then parse `host-key`, otherwise use whole string as host key
+                keystr)
         ip (get-server key)]
-    (util/exec (str "ssh " username "@" ip))))
+    (util/exec (str "ssh " username "@" ip " \"" (string/join " " args) " \"")))) ; append all other args to command in `" $args "` style
 
 (defn ^:command cp
   "Scp file"
