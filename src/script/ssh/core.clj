@@ -36,8 +36,11 @@
                      (= 3 (count match))
                      (last match))      ; if `user@host-key`, then parse `host-key`, otherwise use whole string as host key
                 keystr)
-        ip (get-server key)]
-    (util/exec (str "ssh " username "@" ip " \"" (string/join " " args) " \"")))) ; append all other args to command in `" $args "` style
+        ip (get-server key)
+        command (if (pos? (count args))
+                  (str " \"" (string/join " " args) " \"")
+                  "")]
+    (util/exec (str "ssh " username "@" ip command)))) ; append all other args to command in `" $args "` style
 
 (defn ^:command cp
   "Scp file"
