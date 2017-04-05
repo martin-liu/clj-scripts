@@ -7,7 +7,7 @@ function m_add_ssh_key() {
 function m_grant_user_sudo_access() {
     server=$1
     usr=$2
-    if [ -z "$server" ] || [ -z "$user" ]
+    if [ -z "$server" ] || [ -z "$usr" ]
     then
         echo "no Server or User specific" && return
     fi
