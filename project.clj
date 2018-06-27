@@ -1,17 +1,17 @@
 (defproject clj-scripts "0.1.0-SNAPSHOT"
-  :description "Martin's clojure scripts"
+  :description "clojure utils"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.7.0-beta2"]
-                 [org.clojure/tools.cli "0.3.1"]
-                 [commons-net/commons-net "3.3"]
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/tools.cli "0.3.7"]
+                 [commons-net/commons-net "3.5"]
+                 [org.clojure/core.async "0.4.474"]
                  ;; http client
-                 [clj-http "1.1.2"]
+                 [clj-http "3.9.0"]
                  ;; Html templating
-                 [selmer "0.8.2"]
+                 [selmer "1.11.7"]
                  ]
-  :profiles {:dev {:dependencies [[midje "1.6.3"]]}}
+  :profiles {:dev {:dependencies [[midje "1.9.1"]]}}
   :main script.core
   :aot [script.core])
