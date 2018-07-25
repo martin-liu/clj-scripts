@@ -7,7 +7,7 @@ export TERM=screen-256color
 
 ## Languages
 ### GO
-export GOPATH=~/.go
+export GOPATH=~/martin/code/go
 export PATH=$PATH:$GOPATH/bin
 
 ## Add percol functions
