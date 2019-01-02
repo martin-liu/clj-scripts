@@ -18,19 +18,6 @@ alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
 
 function exists { which $1 &> /dev/null }
 
-## docker for mac
-if exists docker-machine; then
-    command="docker-machine env default 2> /dev/null"
-
-    if [ "$(docker-machine status default)" != "Running" ]; then
-        echo "Starting docker machine 'default' in background..."
-        docker-machine start default > /dev/null 2>&1 &
-    fi
-
-    eval $(eval $command)
-
-fi
-
 ## hub
 if exists hub; then
     alias git=hub
