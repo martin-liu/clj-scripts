@@ -55,13 +55,13 @@ echo '$usr ALL=(ALL) NOPASSWD:ALL' | sudo tee --append /etc/sudoers.d/ldapuser
 }
 
 # ansible tora -m copy -a "src=docker-engine_1.12.5-0~ubuntu-trusty_amd64.deb dest=~"
+# for Ubuntu 16
 function m_ansible_install_docker() {
     group=$1
     shift
     option=$@
-    ansible $group -a "wget 'https://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_1.12.5-0~ubuntu-trusty_amd64.deb'" --sudo $option
-    ansible $group -a "apt-get install -y libltdl7 libsystemd-journal0" --sudo $option
-    ansible $group -a "dpkg -i docker-engine_1.12.5-0~ubuntu-trusty_amd64.deb" --sudo $option
+    ansible $group -a "wget 'https://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_1.13.1-0~ubuntu-xenial_amd64.deb'" --sudo $option
+    ansible $group -a "apt-get update && apt-get install -y libltdl7 && dpkg -i docker-engine_1.13.1-0~ubuntu-xenial_amd64.deb" --sudo $option
 }
 
 
