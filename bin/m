@@ -1,7 +1,7 @@
 #!/bin/sh
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
-OPTIONS="-client -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xverify:none"
+OPTIONS="-client -XX:+TieredCompilation -XX:TieredStopAtLevel=1"
 BIN="java $OPTIONS -jar $(ls $DIR/../target/*-standalone.jar | head -n 1)"
 
 OUTPUT=$($BIN $0 $*)

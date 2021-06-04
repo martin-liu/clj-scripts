@@ -53,3 +53,4 @@ et(){
 }
 
 source $DIR/shell/util.sh
+source $DIR/shell/alias.sh

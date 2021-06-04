@@ -68,3 +68,43 @@ function m_ansible_install_docker() {
 function m_ansible_setup_ssh() {
 
 }
+
+### MAC OS
+## trigger sidecar to ipad
+function m_sidecar() {
+  cat <<EOF > /tmp/m_sidecar.scpt
+set iPadName to "iPad"
+
+tell application "System Events"
+   tell application process "ControlCenter"
+       repeat with tElement in menu bar items of menu bar 1
+           if (exists attribute "AXTitle" of tElement) then
+               if value of attribute "AXTitle" of tElement contains "Display" then
+                   set theBar to tElement
+                   tell theBar
+                       click
+                   end tell
+                   set tElements to entire contents of window 1
+                   repeat with i from 1 to count of tElements
+                       set tElement to item i of tElements
+                       if (title of tElement contains iPadName) then
+                           tell tElement
+                               click
+                           end tell
+                           exit repeat
+                       end if
+                   end repeat
+                   tell theBar
+                       click
+                   end tell
+                   exit repeat
+               end if
+           end if
+       end repeat
+   end tell
+end tell
+EOF
+  
+  osascript /tmp/m_sidecar.scpt
+}
+
